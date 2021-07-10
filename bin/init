@@ -1,0 +1,9 @@
+#!/bin/bash
+if [ $# -eq 0 ]
+    then image="ximbo/magento24-code"
+else
+    image="ximbo/magento24-sample"
+fi
+docker run --name dummy ${image} echo "Copying..."
+docker cp dummy:/var/www/magento/src .
+docker rm -fv dummy

@@ -1,0 +1,50 @@
+#!/bin/bash
+
+./bin/cli sh -c '
+php "$SERVER_ROOT"/bin/magento setup:install \
+  --db-host="$MYSQL_HOSTNAME" \
+  --db-name="$MYSQL_DATABASE" \
+  --db-user="$MYSQL_USERNAME" \
+  --db-password="$MYSQL_ROOT_PASSWORD" \
+  --base-url="$MAGENTO_BASE_URL" \
+  --admin-firstname="$MAGENTO_ADMIN_FIRSTNAME" \
+  --admin-lastname="$MAGENTO_ADMIN_LASTNAME" \
+  --admin-email="$MAGENTO_ADMIN_EMAIL" \
+  --admin-user="$MAGENTO_ADMIN_USER" \
+  --admin-password="$MAGENTO_ADMIN_PASSWORD" \
+  --language="$MAGENTO_LANGUAGE" \
+  --currency="$MAGENTO_CURRENCY" \
+  --timezone="$MAGENTO_TIMEZONE" \
+  --backend-frontname="$MAGENTO_BACKEND_FRONTNAME" \
+  --use-rewrites=1 \
+  --cleanup-database
+'
+
+./bin/cli sh -c '
+echo "Turning on $MAGENTO_RUN_MODE mode..."
+php "$SERVER_ROOT"/bin/magento deploy:mode:set $MAGENTO_RUN_MODE
+'
+
+echo "Copy auth file..."
+./bin/cli sh -c '
+cp "$HOME"/.composer/auth.json "$SERVER_ROOT"/var/composer_home/auth.json
+'
+echo "Upgrade and flush cache..."
+./bin/magento setup:upgrade
+./bin/magento cache:flush
+
+echo "Reindex..."
+./bin/magento indexer:reindex
+
+./bin/cli sh -c '
+echo "
+===================== 🚀 Done 🚀 ===================
+
+      Magento 2 Installed successfully!
+
+      🌎 Admin: $MAGENTO_BASE_URL/$MAGENTO_BACKEND_FRONTNAME
+      👤 User: $MAGENTO_ADMIN_USER
+      🔑 Password: $MAGENTO_ADMIN_PASSWORD
+
+===================== 🚀 Done 🚀 ==================="
+'
