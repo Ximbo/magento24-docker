@@ -1,0 +1,99 @@
+version: "3"
+
+services:
+  #  nginx-proxy:
+  #    image: jwilder/nginx-proxy
+  #    ports:
+  #      - "80:80"
+  #      - "443:443"
+  #    volumes:
+  #      - /var/run/docker.sock:/tmp/docker.sock:ro
+  #    networks:
+  #    - magento24-backend
+
+  nginx:
+    image: ximbo/magento2-nginx
+    env_file: .env
+    ports:
+      - 443:443
+    links:
+      # - nginx-proxy
+      - fpm
+    depends_on:
+      # - nginx-proxy
+      - fpm
+    volumes: &appvolumes
+      - ./src:/var/www/magento/src
+      - ~/.composer:/var/www/magento/.composer
+      - ~/.npm:/var/www/magento/.npm
+      - magento24-sockdata:/sock
+    networks: &appnetworks
+      - magento23-backend
+    logging: &applogging
+      options:
+        max-size: "2m"
+        max-file: "3"
+
+  fpm:
+    image: ximbo/magento2-php-7.4-fpm
+    env_file: .env
+    links:
+      - db
+    depends_on:
+      - app
+    volumes: *appvolumes
+    networks: *appnetworks
+    logging: *applogging
+
+  app:
+    image: ximbo/magento2-php-7.4-cli
+    env_file: .env
+    tty: true
+    links:
+      - db
+    depends_on:
+      - db
+    volumes: *appvolumes
+    networks: *appnetworks
+    logging: *applogging
+
+  cron:
+    image: ximbo/magento2-php-7.4-cli
+    env_file: .env
+    environment:
+      - ENABLE_CRON=true
+    command: "sudo /usr/local/bin/run-cron"
+    tty: true
+    links:
+      - db
+    depends_on:
+      - db
+    volumes: *appvolumes
+    networks: *appnetworks
+    logging: *applogging
+
+  db:
+    image: mysql:8
+    env_file: .env
+    ports:
+      - 3306:3306
+    volumes:
+      - magento24-dbdata:/var/lib/mysql
+    networks: *appnetworks
+    logging: *applogging
+
+  mail:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025
+      - 8025:8025
+    networks: *appnetworks
+    logging: *applogging
+
+networks:
+  magento24-backend:
+    driver: bridge
+
+volumes:
+  magento24-dbdata:
+  magento24-sockdata:
