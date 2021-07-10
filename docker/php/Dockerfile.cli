@@ -1,0 +1,22 @@
+# syntax = edrevo/dockerfile-plus
+
+FROM php:7.4-cli
+
+ARG build_path=cli
+
+INCLUDE+ Dockerfile.common
+
+RUN printf "docker ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/90-docker
+
+# Get composer installed to /usr/local/bin/composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN chown -R docker:docker /var/www/magento/src
+
+COPY ${build_path}/bin/* /usr/local/bin/
+
+RUN ["chmod", "+x", "/usr/local/bin/run-cron"]
+
+USER docker:docker
+
+CMD ["bash"]

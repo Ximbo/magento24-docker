@@ -1,0 +1,13 @@
+# syntax = edrevo/dockerfile-plus
+
+FROM php:7.4-fpm
+
+ARG build_path=fpm
+
+INCLUDE+ Dockerfile.common
+
+COPY ${build_path}/etc/fpm.conf /usr/local/etc/
+
+RUN mkdir /sock
+
+CMD ["php-fpm", "-R"]

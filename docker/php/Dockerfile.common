@@ -1,0 +1,62 @@
+# Install dependencies
+RUN apt-get update \
+  && apt-get install -y \
+    libfreetype6-dev \
+    libicu-dev \
+    libjpeg62-turbo-dev \
+    libmcrypt-dev \
+    libpng-dev \
+    libxslt1-dev \
+    libzip-dev \
+    sendmail-bin \
+    sendmail \
+    sudo \
+    cron \
+    rsyslog \
+    mariadb-client \
+    redis-tools \
+    zip \
+  && docker-php-ext-configure gd --with-freetype --with-jpeg \
+  && docker-php-ext-install \
+    dom \
+    gd \
+    intl \
+    pcntl \
+    pdo_mysql \
+    xsl \
+    zip \
+    bcmath \
+    soap \
+    sockets \
+  && pecl install -o -f xdebug \
+  && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Create privilege user
+RUN addgroup --gid 1000 docker && \
+    adduser --uid 1000 --ingroup docker --home /var/www/magento --shell /bin/bash --disabled-password --gecos "" docker
+
+# Install Mhsendmail
+RUN curl --location --output /usr/local/bin/mhsendmail https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 \
+  && chmod +x /usr/local/bin/mhsendmail
+
+ENV SERVER_ROOT /var/www/magento/src
+ENV MAGENTO_RUN_MODE production
+ENV UPLOAD_MAX_FILESIZE 64M
+ENV PHP_MEMORY_LIMIT 2G
+ENV PHP_ENABLE_XDEBUG false
+ENV DEBUG false
+
+RUN mkdir -p /var/www/magento/src
+
+COPY common/etc/xdebug.ini /usr/local/etc/php/conf.d/zz-xdebug.ini
+COPY common/etc/mail.ini /usr/local/etc/php/conf.d/zz-mail.ini
+
+COPY ${build_path}/etc/php.ini /usr/local/etc/php/conf.d/zz-magento.ini
+
+COPY ${build_path}/docker-entrypoint.sh /docker-entrypoint.sh
+RUN ["chmod", "+x", "/docker-entrypoint.sh"]
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
+VOLUME /var/www/magento
+WORKDIR /var/www/magento
