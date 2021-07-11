@@ -17,6 +17,7 @@ php "$SERVER_ROOT"/bin/magento setup:install \
   --timezone="$MAGENTO_TIMEZONE" \
   --backend-frontname="$MAGENTO_BACKEND_FRONTNAME" \
   --use-rewrites=1 \
+  --elasticsearch-host="elasticsearch" \
   --cleanup-database
 '
 
