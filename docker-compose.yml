@@ -28,7 +28,7 @@ services:
       - ~/.npm:/var/www/magento/.npm
       - magento24-sockdata:/sock
     networks: &appnetworks
-      - magento23-backend
+      - magento24-backend
     logging: &applogging
       options:
         max-size: "2m"
