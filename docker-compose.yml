@@ -39,6 +39,7 @@ services:
     env_file: .env
     links:
       - db
+      - elasticsearch
     depends_on:
       - app
     volumes: *appvolumes
@@ -51,8 +52,10 @@ services:
     tty: true
     links:
       - db
+      - elasticsearch
     depends_on:
       - db
+      - elasticsearch
     volumes: *appvolumes
     networks: *appnetworks
     logging: *applogging
@@ -66,8 +69,10 @@ services:
     tty: true
     links:
       - db
+      - elasticsearch
     depends_on:
       - db
+      - elasticsearch
     volumes: *appvolumes
     networks: *appnetworks
     logging: *applogging
@@ -79,6 +84,16 @@ services:
       - 3306:3306
     volumes:
       - magento24-dbdata:/var/lib/mysql
+    networks: *appnetworks
+    logging: *applogging
+
+  elasticsearch:
+    image: elasticsearch:7.13.3
+    env_file: .env
+    environment:
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
     networks: *appnetworks
     logging: *applogging
 
