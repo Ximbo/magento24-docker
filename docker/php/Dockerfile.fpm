@@ -6,7 +6,7 @@ ARG build_path=fpm
 
 INCLUDE+ Dockerfile.common
 
-COPY ${build_path}/etc/fpm.conf /usr/local/etc/
+COPY ${build_path}/etc/fpm.conf /usr/local/etc/php-fpm.conf
 
 RUN mkdir /sock
 
