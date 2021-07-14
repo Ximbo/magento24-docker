@@ -9,12 +9,12 @@ RUN echo "Dockerfile.Username" \
     && echo "Dockerfile.Password" \
     && echo ${ARG_COMPOSER_MAGENTO_PASSWORD}
 
-RUN echo "WHIAMI" \
-    && whoami
+RUN echo "WHIAMI" && whoami \
+    && echo "PWD" && pwd && echo $HOME \
+    && ls -la
 
 RUN composer config --global http-basic.repo.magento.com ${ARG_COMPOSER_MAGENTO_USERNAME} ${ARG_COMPOSER_MAGENTO_PASSWORD}
 RUN cat ${HD}/.composer/auth.json
-RUN fdsfdsf
 RUN composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition:2.4.2 --no-interaction src
 
 RUN rm -rf ${HD}/.composer/cache/files/ \
