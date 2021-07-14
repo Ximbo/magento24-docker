@@ -12,7 +12,9 @@ RUN echo "Dockerfile.Username" \
 RUN echo "WHIAMI" && whoami \
     && echo "PWD" && pwd && echo $HOME \
     && ls -la \
-    && ls -la ${HD}
+    && ls -la ${HD} \
+    && echo "Composer config" \
+    && composer config --global --list
 
 RUN composer config --global http-basic.repo.magento.com ${ARG_COMPOSER_MAGENTO_USERNAME} ${ARG_COMPOSER_MAGENTO_PASSWORD}
 RUN ls -la
