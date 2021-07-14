@@ -14,7 +14,10 @@ RUN echo "WHIAMI" && whoami \
     && ls -la \
     && ls -la ${HD}
 
+RUN composer config --global --list
 RUN composer config --global http-basic.repo.magento.com ${ARG_COMPOSER_MAGENTO_USERNAME} ${ARG_COMPOSER_MAGENTO_PASSWORD}
+RUN composer config --global --list
+
 RUN ls -la
 RUN cat ${HD}/.composer/auth.json
 RUN composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition:2.4.2 --no-interaction src
