@@ -1,0 +1,9 @@
+#!/bin/bash
+
+#docker-compose exec --user=root app rm -f /usr/local/etc/php/conf.d/zz-xdebug.ini
+#docker-compose exec --user=root fpm rm -f /usr/local/etc/php/conf.d/zz-xdebug.ini
+
+docker-compose exec --user=root app XDEBUG_MODE=off
+docker-compose exec --user=root fpm XDEBUG_MODE=off
+docker-compose exec --user=root fpm kill -USR2 1
+echo "XDebug Disabled"
