@@ -37,6 +37,8 @@ services:
   fpm:
     image: ximbo/magento2-php-7.4-fpm
     env_file: .env
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
     links:
       - db
       - elasticsearch
@@ -50,6 +52,8 @@ services:
     image: ximbo/magento2-php-7.4-cli
     env_file: .env
     tty: true
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
     links:
       - db
       - elasticsearch
