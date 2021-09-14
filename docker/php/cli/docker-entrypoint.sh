@@ -15,11 +15,6 @@ if [ "$ENABLE_CRON" == "true" ]; then
     sudo service rsyslog start
 fi
 
-# Configure xdebug if required
-[ "$PHP_ENABLE_XDEBUG" = "true" ] && \
-    sudo docker-php-ext-enable xdebug && \
-    echo "Xdebug is enabled"
-
 # Configure composer
 [ ! -z "${COMPOSER_GITHUB_TOKEN}" ] && \
     composer config --global github-oauth.github.com $COMPOSER_GITHUB_TOKEN
