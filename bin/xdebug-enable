@@ -1,12 +1,8 @@
 #!/bin/bash
 
-#SOURCE=./docker/php/etc/zz-xdebug.ini
-#DESTINATION=/usr/local/etc/php/conf.d/zz-xdebug.ini
+FILE=/usr/local/etc/php/conf.d/zz-xdebug.ini
 
-#docker cp $SOURCE "$(docker-compose ps -q app)":$DESTINATION
-#docker cp $SOURCE "$(docker-compose ps -q fpm)":$DESTINATION
-
-docker-compose exec --user=root app XDEBUG_MODE=develop,debug
-docker-compose exec --user=root fpm XDEBUG_MODE=develop,debug
+docker-compose exec --user=root app sed -i 's/;zend_extension = xdebug/zend_extension = xdebug/g' $FILE
+docker-compose exec --user=root fpm sed -i 's/;zend_extension = xdebug/zend_extension = xdebug/g' $FILE
 docker-compose exec --user=root fpm kill -USR2 1
 echo "XDebug enabled"
