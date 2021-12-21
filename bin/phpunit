@@ -1,0 +1,5 @@
+#!/bin/bash
+./bin/cli sh -c "
+cd ./src
+./vendor/bin/phpunit -c dev/tests/unit/phpunit.xml.dist \"$@\"
+"
