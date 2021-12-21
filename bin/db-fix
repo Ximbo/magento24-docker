@@ -1,0 +1,14 @@
+#!/bin/bash
+
+MYSQL_HOSTNAME=$(grep MYSQL_HOSTNAME .env | cut -d '=' -f2)
+MYSQL_DATABASE=$(grep MYSQL_DATABASE .env | cut -d '=' -f2)
+MYSQL_ROOT_USERNAME=root
+MYSQL_ROOT_PASSWORD=$(grep MYSQL_ROOT_PASSWORD .env | cut -d '=' -f2)
+MYSQL_USERNAME=$(grep MYSQL_USER .env | cut -d '=' -f2)
+MYSQL_PASSWORD=$(grep MYSQL_PASSWORD .env | cut -d '=' -f2)
+CONTAINER=$(docker-compose ps -q $MYSQL_HOSTNAME)
+
+docker container exec -i $CONTAINER mysql -u$MYSQL_ROOT_USERNAME -p$MYSQL_ROOT_PASSWORD -e "SET GLOBAL log_bin_trust_function_creators = 1;"
+docker container exec -i $CONTAINER mysql -u$MYSQL_USERNAME -p$MYSQL_PASSWORD -e "SHOW GLOBAL VARIABLES LIKE 'version';"
+
+echo 'Done'
