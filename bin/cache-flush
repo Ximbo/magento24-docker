@@ -1,0 +1,14 @@
+#!/bin/bash
+
+./bin/cli sh -c '
+rm -rf "$SERVER_ROOT"/generated/code
+rm -rf "$SERVER_ROOT"/generated/metadata
+rm -rf "$SERVER_ROOT"/var/cache
+rm -rf "$SERVER_ROOT"/var/composer_home
+rm -rf "$SERVER_ROOT"/var/log
+rm -rf "$SERVER_ROOT"/var/page_cache
+rm -rf "$SERVER_ROOT"/var/tmp
+rm -rf "$SERVER_ROOT"/var/vendor
+rm -rf "$SERVER_ROOT"/var/view_preprocessed
+rm -rf "$SERVER_ROOT"/pub/static/*
+'
