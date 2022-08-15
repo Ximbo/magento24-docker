@@ -4,7 +4,7 @@
 php "$SERVER_ROOT"/bin/magento setup:install \
   --db-host="$MYSQL_HOSTNAME" \
   --db-name="$MYSQL_DATABASE" \
-  --db-user="$MYSQL_USERNAME" \
+  --db-user=root \
   --db-password="$MYSQL_ROOT_PASSWORD" \
   --base-url="$MAGENTO_BASE_URL" \
   --admin-firstname="$MAGENTO_ADMIN_FIRSTNAME" \
