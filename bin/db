@@ -1,0 +1,9 @@
+#!/bin/bash
+
+MYSQL_HOSTNAME=$(grep MYSQL_HOSTNAME .env | cut -d '=' -f2)
+MYSQL_DATABASE=$(grep MYSQL_DATABASE .env | cut -d '=' -f2)
+MYSQL_USERNAME=root
+MYSQL_ROOT_PASSWORD=$(grep MYSQL_ROOT_PASSWORD .env | cut -d '=' -f2)
+CONTAINER=$(docker-compose ps -q $MYSQL_HOSTNAME)
+
+docker container exec -it $CONTAINER mysql -u$MYSQL_USERNAME -p$MYSQL_ROOT_PASSWORD -D ${MYSQL_DATABASE}
