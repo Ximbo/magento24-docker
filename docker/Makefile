@@ -2,8 +2,8 @@ IMAGE_CLI := ximbo/magento2-php-7.4-cli:1.0
 IMAGE_FPM := ximbo/magento2-php-7.4-fpm:1.0
 IMAGE_NGINX := ximbo/magento2-nginx:1.21.1
 IMAGE_BUSYBOX := ximbo/magento2-busybox:1.0
-IMAGE_BUILDER := ximbo/magento2-builder:2.4.2
-IMAGE_CODE := ximbo/magento2-code:2.4.2
+IMAGE_BUILDER := ximbo/magento2-builder:2.4.5
+IMAGE_CODE := ximbo/magento2-code:2.4.5
 IMAGE_SAMPLEDATA := ximbo/magento2-sampledata:2.4.2
 
 .PHONY: all
@@ -46,7 +46,7 @@ builder:
 # Make code image
 .PHONY: code
 code:
-	@docker build --pull --build-arg ARG_COMPOSER_MAGENTO_USERNAME=$(ARG_COMPOSER_MAGENTO_USERNAME) --build-arg ARG_COMPOSER_MAGENTO_PASSWORD=$(ARG_COMPOSER_MAGENTO_PASSWORD) -t $(IMAGE_CODE) code
+	@docker build --pull -t $(IMAGE_CODE) code
 
 # Make sampledata image
 .PHONY: sampledata
