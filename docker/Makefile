@@ -1,10 +1,10 @@
-IMAGE_CLI := ximbo/magento2-php-7.4-cli:1.0
-IMAGE_FPM := ximbo/magento2-php-7.4-fpm:1.0
+IMAGE_CLI := ximbo/magento2-php-8.1-cli:1.0
+IMAGE_FPM := ximbo/magento2-php-8.1-fpm:1.0
 IMAGE_NGINX := ximbo/magento2-nginx:1.21.1
 IMAGE_BUSYBOX := ximbo/magento2-busybox:1.0
 IMAGE_BUILDER := ximbo/magento2-builder:2.4.5
 IMAGE_CODE := ximbo/magento2-code:2.4.5
-IMAGE_SAMPLEDATA := ximbo/magento2-sampledata:2.4.2
+IMAGE_SAMPLEDATA := ximbo/magento2-sampledata:2.4.5
 
 .PHONY: all
 all: build push
@@ -21,12 +21,12 @@ push:
 # Make php cli image
 .PHONY: cli
 cli:
-	@docker build -t $(IMAGE_CLI) -f php/Dockerfile.cli php
+	DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker build -t $(IMAGE_CLI) -f php/Dockerfile.cli php
 
 # Make php fpm image
 .PHONY: fpm
 fpm:
-	@docker build -t $(IMAGE_FPM) -f php/Dockerfile.fpm php
+	DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker build -t $(IMAGE_FPM) -f php/Dockerfile.fpm php
 
 # Make nginx image
 .PHONY: nginx

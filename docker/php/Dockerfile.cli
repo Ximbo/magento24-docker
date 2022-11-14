@@ -1,6 +1,6 @@
 # syntax = edrevo/dockerfile-plus
 
-FROM php:7.4-cli
+FROM php:8.1-cli
 
 ARG build_path=cli
 
@@ -9,7 +9,7 @@ INCLUDE+ Dockerfile.common
 RUN printf "docker ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/90-docker
 
 # Get composer installed to /usr/local/bin/composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --version=2.2.18 --filename=composer
 
 RUN chown -R docker:docker /var/www/magento/src
 

@@ -1,4 +1,4 @@
-FROM ximbo/magento2-php-7.4-cli
+FROM ximbo/magento2-php-8.1-cli
 
 ARG ARG_COMPOSER_MAGENTO_USERNAME
 ARG ARG_COMPOSER_MAGENTO_PASSWORD
