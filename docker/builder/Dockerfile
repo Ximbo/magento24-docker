@@ -1,13 +1,11 @@
+# syntax = docker/dockerfile:1.3
+
 FROM ximbo/magento2-php-8.1-cli
 
-ARG ARG_COMPOSER_MAGENTO_USERNAME
-ARG ARG_COMPOSER_MAGENTO_PASSWORD
+RUN sudo rm /usr/local/etc/php/conf.d/zz-xdebug.ini \
+    && sudo pecl uninstall xdebug
 
-RUN sudo apt-get update \
-    && sudo apt-get install -y git \
-    && sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-    && composer config --global "http-basic.repo.magento.com" ${ARG_COMPOSER_MAGENTO_USERNAME} ${ARG_COMPOSER_MAGENTO_PASSWORD} \
-    && composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition:2.4.5 --no-interaction ~/src \
-    && rm -rf ~/.composer/cache/files/ \
-    && rm -rf ~/.composer/cache/repo/ \
-    && rm -f ~/.composer/auth.json
+RUN --mount=type=secret,id=composer,mode=0644,uid=1000,gid=1000 mkdir ~/.composer \
+    && cp /run/secrets/composer ~/.composer/auth.json \
+    && composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition:2.4.5-p1 --no-interaction ~/src \
+    && rm -rf ~/.composer/

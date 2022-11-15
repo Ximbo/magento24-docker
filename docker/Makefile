@@ -6,6 +6,9 @@ IMAGE_BUILDER := ximbo/magento2-builder:2.4.5
 IMAGE_CODE := ximbo/magento2-code:2.4.5
 IMAGE_SAMPLEDATA := ximbo/magento2-sampledata:2.4.5
 
+COMPOSER_MAGENTO_USERNAME := $COMPOSER_MAGENTO_USERNAME
+COMPOSER_MAGENTO_PASSWORD := $COMPOSER_MAGENTO_PASSWORD
+
 .PHONY: all
 all: build push
 
@@ -36,19 +39,19 @@ nginx:
 # Make busybox image
 .PHONY: busybox
 busybox:
-	@docker build --pull -t $(IMAGE_BUSYBOX) busybox
+	@docker build -t $(IMAGE_BUSYBOX) busybox
 
 # Make builder image
 .PHONY: builder
 builder:
-	@docker build --pull --build-arg ARG_COMPOSER_MAGENTO_USERNAME=$(ARG_COMPOSER_MAGENTO_USERNAME) --build-arg ARG_COMPOSER_MAGENTO_PASSWORD=$(ARG_COMPOSER_MAGENTO_PASSWORD) -t $(IMAGE_BUILDER) builder
+	DOCKER_BUILDKIT=1 docker build --secret id=composer,src=$(HOME)/.composer/auth.json -t $(IMAGE_BUILDER) builder
 
 # Make code image
 .PHONY: code
 code:
-	@docker build --pull -t $(IMAGE_CODE) code
+	@docker build -t $(IMAGE_CODE) code
 
 # Make sampledata image
 .PHONY: sampledata
 sampledata:
-	@docker build --pull --build-arg ARG_COMPOSER_MAGENTO_USERNAME=$(ARG_COMPOSER_MAGENTO_USERNAME) --build-arg ARG_COMPOSER_MAGENTO_PASSWORD=$(ARG_COMPOSER_MAGENTO_PASSWORD) -t $(IMAGE_SAMPLEDATA) sampledata
+	DOCKER_BUILDKIT=1 docker build --secret id=composer,src=$(HOME)/.composer/auth.json -t $(IMAGE_SAMPLEDATA) sampledata

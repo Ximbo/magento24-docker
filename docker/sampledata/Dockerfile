@@ -1,15 +1,13 @@
-FROM ximbo/magento2-builder:2.4.2 as builder
+FROM ximbo/magento2-builder:2.4.5 as builder
 
-ARG ARG_COMPOSER_MAGENTO_USERNAME
-ARG ARG_COMPOSER_MAGENTO_PASSWORD
-
-RUN composer config --global "http-basic.repo.magento.com" ${ARG_COMPOSER_MAGENTO_USERNAME} ${ARG_COMPOSER_MAGENTO_PASSWORD} \
+RUN --mount=type=secret,id=composer,mode=0644,uid=1000,gid=1000 mkdir ~/.composer \
+    && cp /run/secrets/composer ~/.composer/auth.json \
     && mkdir -p ~/src/var/composer_home \
     && cp -f ~/.composer/auth.json ~/src/var/composer_home/auth.json \
     && php ~/src/bin/magento sampledata:deploy \
     && rm -rf ~/src/generated/code \
-    && rm -f ~/.composer/auth.json \
-    && rm -rf ~/src/var/composer_home
+    && rm -rf ~/.composer/ \
+    && rm -rf ~/src/var/composer_home/
 
 FROM ximbo/magento2-busybox
 
